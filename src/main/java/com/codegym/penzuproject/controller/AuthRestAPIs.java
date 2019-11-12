@@ -1,7 +1,9 @@
 package com.codegym.penzuproject.controller;
 
 import com.codegym.penzuproject.message.request.LoginForm;
+import com.codegym.penzuproject.message.request.PasswordForm;
 import com.codegym.penzuproject.message.request.SignUpForm;
+import com.codegym.penzuproject.message.request.UserForm;
 import com.codegym.penzuproject.message.response.JwtResponse;
 import com.codegym.penzuproject.message.response.ResponseMessage;
 import com.codegym.penzuproject.model.Role;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -56,7 +59,8 @@ public class AuthRestAPIs {
         String jwt = jwtProvider.generateJwtToken(authentication);
         UserPrinciple userDetails = (UserPrinciple) authentication.getPrincipal();
 
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getId() ,
+        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(),
+                userDetails.getId() , userDetails.getName(),
                 userDetails.getAuthorities()
                 ));
     }
@@ -105,5 +109,38 @@ public class AuthRestAPIs {
         userRepository.save(user);
 
         return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
+    }
+
+    @PutMapping("/update-profile/{id}")
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserForm userForm, @PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if(user == null) {
+            return new ResponseEntity<>("Can't Find User By Id" + id, HttpStatus.BAD_REQUEST);
+        }
+
+        user.get().setName(userForm.getName());
+
+        userRepository.save(user.get());
+
+        return new ResponseEntity<>(new ResponseMessage("Update successful"),HttpStatus.OK);
+    }
+
+    @PutMapping("/update-password/{id}")
+    public ResponseEntity<?>updatePassword(@Valid @RequestBody PasswordForm passForm, @PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user == null ){
+            return new ResponseEntity<>(new ResponseMessage("Not found user"),HttpStatus.NOT_FOUND);
+        }
+
+                Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(passForm.getUsername(), passForm.getCurrentPassword()));
+
+        user.get().setPassword(passwordEncoder.encode(passForm.getNewPassword()));
+
+        userRepository.save(user.get());
+
+        return new ResponseEntity<>(new ResponseMessage("Change password successful"),HttpStatus.OK);
     }
 }

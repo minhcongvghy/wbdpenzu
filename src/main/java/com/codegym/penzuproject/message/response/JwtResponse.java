@@ -9,13 +9,23 @@ public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private String username;
+    private String name;
     private Collection<? extends GrantedAuthority> roles;
 
-    public JwtResponse(String accessToken, String username,Long id, Collection<? extends GrantedAuthority> roles) {
+    public JwtResponse(String accessToken, String username,Long id, String name, Collection<? extends GrantedAuthority> roles) {
         this.token = accessToken;
         this.username = username;
         this.roles = roles;
         this.id = id;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {

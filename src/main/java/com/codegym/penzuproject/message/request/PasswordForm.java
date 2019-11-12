@@ -1,9 +1,18 @@
 package com.codegym.penzuproject.message.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class PasswordForm {
     private Long id;
+    @NotBlank
+    @Size(min = 3 , max = 50)
     private String username;
+    @NotBlank
+    @Size(min = 6 ,max = 100)
     private String currentPassword;
+    @NotBlank
+    @Size(min = 6 ,max = 100)
     private String newPassword;
 
     public PasswordForm() {

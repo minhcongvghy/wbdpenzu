@@ -119,12 +119,17 @@ public class AuthRestAPIs {
             return new ResponseEntity<>("Can't Find User By Id" + id, HttpStatus.BAD_REQUEST);
         }
 
-        user.get().setName(userForm.getName());
+        try {
+            user.get().setName(userForm.getName());
 
-        userRepository.save(user.get());
+            userRepository.save(user.get());
 
-        return new ResponseEntity<>(new ResponseMessage("Update successful"),HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseMessage("Update successful"), HttpStatus.OK);
+        } catch (Exception e ) {
+           throw new RuntimeException("Fail!");
+        }
     }
+
 
     @PutMapping("/update-password/{id}")
     public ResponseEntity<?>updatePassword(@Valid @RequestBody PasswordForm passForm, @PathVariable Long id) {
@@ -134,6 +139,7 @@ public class AuthRestAPIs {
             return new ResponseEntity<>(new ResponseMessage("Not found user"),HttpStatus.NOT_FOUND);
         }
 
+        try {
                 Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(passForm.getUsername(), passForm.getCurrentPassword()));
 
@@ -142,5 +148,8 @@ public class AuthRestAPIs {
         userRepository.save(user.get());
 
         return new ResponseEntity<>(new ResponseMessage("Change password successful"),HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException("Fail!");
+        }
     }
 }

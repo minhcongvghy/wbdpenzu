@@ -11,5 +11,10 @@ public interface IUserService {
     Boolean existsByUsername(String username);
 
     Optional<User> findById(Long id);
+
     void save(User user);
+
+    Iterable<User> findAll();
+
+    void delete(Long id);
 }

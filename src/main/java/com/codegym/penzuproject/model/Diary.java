@@ -1,7 +1,7 @@
 package com.codegym.penzuproject.model;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "diary")
@@ -10,10 +10,11 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime date;
+    private LocalDate date;
     private String title;
     private String description;
     private String file;
+    private Boolean isUpdate;
 
     @Lob
     private String content;
@@ -24,7 +25,26 @@ public class Diary {
     @ManyToOne
     private User user;
 
-    public Diary(LocalDateTime date, String title, String description, String file, String content, Tag tag, User user) {
+    public String getUpdate() {
+        return isUpdate.toString();
+    }
+
+    public void setUpdate(String update) {
+        isUpdate = Boolean.valueOf(update);
+    }
+
+    public Diary(LocalDate date, String title, String description, String file, Boolean isUpdate, String content, Tag tag, User user) {
+        this.date = date;
+        this.title = title;
+        this.description = description;
+        this.file = file;
+        this.isUpdate = isUpdate;
+        this.content = content;
+        this.tag = tag;
+        this.user = user;
+    }
+
+    public Diary(LocalDate date, String title, String description, String file, String content, Tag tag, User user) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -34,7 +54,7 @@ public class Diary {
         this.user = user;
     }
 
-    public Diary(LocalDateTime date, String title, String description, String file, String content, Tag tag) {
+    public Diary(LocalDate date, String title, String description, String file, String content, Tag tag) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -46,7 +66,7 @@ public class Diary {
     public Diary() {
     }
 
-    public Diary(LocalDateTime date, String title, String description, String file, String content) {
+    public Diary(LocalDate date, String title, String description, String file, String content) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -78,11 +98,11 @@ public class Diary {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

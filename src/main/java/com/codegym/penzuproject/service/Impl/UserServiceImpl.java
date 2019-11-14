@@ -34,4 +34,14 @@ public class UserServiceImpl implements IUserService {
     public void save(User user) {
         repository.save(user);
     }
+
+    @Override
+    public Iterable<User> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
 }

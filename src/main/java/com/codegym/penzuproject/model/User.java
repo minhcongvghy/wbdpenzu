@@ -1,5 +1,6 @@
 package com.codegym.penzuproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,6 +49,10 @@ public class User {
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(targetEntity = Diary.class , mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Diary> diaries;
+
     public User() {
     }
 
@@ -63,6 +69,23 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles, List<Diary> diaries) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.diaries = diaries;
+    }
+
+    public List<Diary> getDiaries() {
+        return diaries;
+    }
+
+    public void setDiaries(List<Diary> diaries) {
+        this.diaries = diaries;
     }
 
     public Long getId() {

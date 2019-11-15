@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class DiaryRestAPI {
@@ -47,6 +47,7 @@ public class DiaryRestAPI {
         LocalDate date = LocalDate.now() ;
 
         diary.setDate(date);
+        diary.setUpdate(false);
         diaryService.save(diary);
 
         return new ResponseEntity<>(diary,HttpStatus.CREATED);
@@ -65,7 +66,7 @@ public class DiaryRestAPI {
         diary1.get().setTitle(diary.getTitle());
         diary1.get().setDescription(diary.getDescription());
         diary1.get().setContent(diary.getContent());
-        diary1.get().setUpdate(diary.getUpdate());
+        diary1.get().setUpdate(true);
         diary1.get().setTag(diary.getTag());
         diary1.get().setUser(diary.getUser());
 

@@ -30,4 +30,9 @@ public class DiaryServiceImpl implements IDiaryService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Iterable<Diary> findDiariesByUserId(Long user_id) {
+        return repository.findDiariesByUserId(user_id);
+    }
 }

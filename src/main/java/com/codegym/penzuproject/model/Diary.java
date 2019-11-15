@@ -29,8 +29,8 @@ public class Diary {
         return isUpdate.toString();
     }
 
-    public void setUpdate(String update) {
-        isUpdate = Boolean.valueOf(update);
+    public void setUpdate(Boolean update) {
+        isUpdate = update;
     }
 
     public Diary(LocalDate date, String title, String description, String file, Boolean isUpdate, String content, Tag tag, User user) {

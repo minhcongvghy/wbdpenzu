@@ -12,4 +12,6 @@ public interface IDiaryService {
     Diary save(Diary diary);
 
     void delete(Long id);
+
+    Iterable<Diary> findDiariesByUserId(Long user_id);
 }

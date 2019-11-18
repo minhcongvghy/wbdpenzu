@@ -11,8 +11,13 @@ public class Diary {
     private Long id;
 
     private LocalDate date;
+
+    @Lob
     private String title;
+
+    @Lob
     private String description;
+
     private String file;
     private Boolean isUpdate;
 

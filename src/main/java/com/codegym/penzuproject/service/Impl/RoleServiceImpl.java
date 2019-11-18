@@ -5,9 +5,10 @@ import com.codegym.penzuproject.model.RoleName;
 import com.codegym.penzuproject.repository.IRoleRepository;
 import com.codegym.penzuproject.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class RoleServiceImpl implements IRoleService {
     @Autowired
     private IRoleRepository repository;

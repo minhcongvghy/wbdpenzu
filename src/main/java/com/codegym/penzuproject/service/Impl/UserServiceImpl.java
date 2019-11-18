@@ -4,9 +4,10 @@ import com.codegym.penzuproject.model.User;
 import com.codegym.penzuproject.repository.IUserRepository;
 import com.codegym.penzuproject.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class UserServiceImpl implements IUserService {
     @Autowired
     private IUserRepository repository;

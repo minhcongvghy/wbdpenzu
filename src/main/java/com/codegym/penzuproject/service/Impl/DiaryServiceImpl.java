@@ -4,9 +4,11 @@ import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.repository.IDiaryRepository;
 import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class DiaryServiceImpl implements IDiaryService {
     @Autowired
     private IDiaryRepository repository;

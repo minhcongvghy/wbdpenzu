@@ -37,4 +37,11 @@ public class DiaryServiceImpl implements IDiaryService {
     public Iterable<Diary> findDiariesByUserId(Long user_id) {
         return repository.findDiariesByUserId(user_id);
     }
+
+    @Override
+    public Iterable<Diary> findDiariesByTitleContainingAndUserId(String title, Long user_id) {
+        return repository.findDiariesByTitleContainingAndUserId(title,user_id);
+    }
+
+
 }

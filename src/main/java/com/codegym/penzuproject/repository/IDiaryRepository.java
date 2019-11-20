@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IDiaryRepository extends JpaRepository<Diary,Long> {
     Iterable<Diary> findDiariesByUserId(Long user_id);
+    Iterable<Diary> findDiariesByTitleContainingAndUserId(String title,Long user_id);
 }

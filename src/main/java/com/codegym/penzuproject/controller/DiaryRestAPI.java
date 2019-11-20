@@ -1,5 +1,6 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.message.request.SearchByTitleAndUserId;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +87,19 @@ public class DiaryRestAPI {
         diaryService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/diary/search")
+    public ResponseEntity<?> searchDiaryByTitle(@RequestBody SearchByTitleAndUserId searchByTitleAndUserId) {
+        List<Diary> diaries;
+        if(searchByTitleAndUserId.getTitle() == "") {
+            diaries = (List<Diary>) diaryService.findAll();
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
+        diaries = (List<Diary>) diaryService.findDiariesByTitleContainingAndUserId(searchByTitleAndUserId.getTitle(),searchByTitleAndUserId.getId());
+        return new ResponseEntity<>(diaries,HttpStatus.OK);
     }
 }

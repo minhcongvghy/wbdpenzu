@@ -14,4 +14,6 @@ public interface IDiaryService {
     void delete(Long id);
 
     Iterable<Diary> findDiariesByUserId(Long user_id);
+
+    Iterable<Diary> findDiariesByTitleContainingAndUserId(String title,Long user_id);
 }

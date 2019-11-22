@@ -4,6 +4,8 @@ import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.repository.IDiaryRepository;
 import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,7 +22,12 @@ public class DiaryServiceImpl implements IDiaryService {
 
     @Override
     public Iterable<Diary> findAll() {
-        return repository.findAll();
+        return  repository.findAll();
+    }
+
+    @Override
+    public Page<Diary> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Override

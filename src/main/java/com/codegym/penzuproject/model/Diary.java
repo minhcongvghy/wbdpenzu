@@ -18,7 +18,11 @@ public class Diary {
     @Lob
     private String description;
 
+    @Lob
     private String file;
+
+    private String typeFile;
+
     private Boolean isUpdate;
 
     @Lob
@@ -29,6 +33,26 @@ public class Diary {
 
     @ManyToOne
     private User user;
+
+    public Diary(LocalDate date, String title, String description, String file, String typeFile, Boolean isUpdate, String content, Tag tag, User user) {
+        this.date = date;
+        this.title = title;
+        this.description = description;
+        this.file = file;
+        this.typeFile = typeFile;
+        this.isUpdate = isUpdate;
+        this.content = content;
+        this.tag = tag;
+        this.user = user;
+    }
+
+    public String getTypeFile() {
+        return typeFile;
+    }
+
+    public void setTypeFile(String typeFile) {
+        this.typeFile = typeFile;
+    }
 
     public String getUpdate() {
         return isUpdate.toString();

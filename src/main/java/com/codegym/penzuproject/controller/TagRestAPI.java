@@ -1,6 +1,8 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.model.Tag;
+import com.codegym.penzuproject.service.IDiaryService;
 import com.codegym.penzuproject.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,9 @@ import java.util.Optional;
 public class TagRestAPI {
     @Autowired
     private ITagService tagService;
+
+    @Autowired
+    private IDiaryService diaryService;
 
     @GetMapping("/tag")
     public ResponseEntity<?> getListAllTag() {
@@ -63,9 +68,16 @@ public class TagRestAPI {
     @DeleteMapping("/tag/{id}")
     public ResponseEntity<?> deleteTag(@PathVariable Long id) {
         Optional<Tag> tag = tagService.findById(id);
-
         if(!tag.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Diary> diaries = (List<Diary>) diaryService.findDiariesByUserId(id);
+
+        if(!diaries.isEmpty()) {
+            for (Diary diary: diaries) {
+                diaryService.delete(diary.getId());
+            }
         }
 
         tagService.delete(id);

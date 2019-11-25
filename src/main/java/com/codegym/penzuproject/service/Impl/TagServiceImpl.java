@@ -31,4 +31,9 @@ public class TagServiceImpl implements ITagService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Iterable<Tag> findTagsByNameContaining(String tag_name) {
+        return repository.findTagsByNameContaining(tag_name);
+    }
 }

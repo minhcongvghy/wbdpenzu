@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ITagRepository extends JpaRepository<Tag,Long> {
+    Iterable<Tag> findTagsByNameContaining(String tag_name);
 }

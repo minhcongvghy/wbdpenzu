@@ -12,4 +12,7 @@ public interface ITagService {
     Tag save(Tag tag);
 
     void delete(Long id);
+
+    Iterable<Tag> findTagsByNameContaining(String tag_name);
+
 }

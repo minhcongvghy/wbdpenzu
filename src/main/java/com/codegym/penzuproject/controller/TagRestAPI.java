@@ -1,5 +1,6 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.message.request.SearchTagByNameTag;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.model.Tag;
 import com.codegym.penzuproject.service.IDiaryService;
@@ -83,5 +84,24 @@ public class TagRestAPI {
         tagService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/tag/search-by-name")
+    public ResponseEntity<?> searchTagByNameTag(@RequestBody SearchTagByNameTag tagForm) {
+        if(tagForm.getName() == "" || tagForm.getName() == null ) {
+            List<Tag> tags = (List<Tag>) tagService.findAll();
+            if(tags.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(tags,HttpStatus.OK);
+            }
+        }
+
+        List<Tag> tags = (List<Tag>) tagService.findTagsByNameContaining(tagForm.getName());
+        if(tags.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(tags,HttpStatus.OK);
+        }
     }
 }

@@ -23,4 +23,6 @@ public interface IDiaryService {
     Iterable<Diary> findDiariesByTitleContainingAndUserId(String title,Long user_id);
 
     Iterable<Diary> findDiariesByTagId(Long tag_id);
+
+    Iterable<Diary> findDiariesByTitleContaining(String title);
 }

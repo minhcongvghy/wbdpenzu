@@ -1,6 +1,7 @@
 package com.codegym.penzuproject.controller;
 
 import com.codegym.penzuproject.message.request.SearchByTitleAndUserId;
+import com.codegym.penzuproject.message.request.SearchByTitleForm;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +127,25 @@ public class DiaryRestAPI {
         }
 
         return new ResponseEntity<>(diaries,HttpStatus.OK);
+    }
+
+    @PostMapping("/diary/search-by-title")
+    public ResponseEntity<?> getListDiaryByTitle(@RequestBody SearchByTitleForm titleForm) {
+        if (titleForm.getTitle() == "" || titleForm.getTitle() == null ) {
+            List<Diary> diaries = (List<Diary>) diaryService.findAll();
+
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(diaries,HttpStatus.OK);
+            }
+        }
+
+        List<Diary> diaries = (List<Diary>) diaryService.findDiariesByTitleContaining(titleForm.getTitle());
+           if(diaries.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+           } else {
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
     }
 }

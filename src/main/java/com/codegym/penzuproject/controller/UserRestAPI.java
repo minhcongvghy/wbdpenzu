@@ -51,6 +51,7 @@ public class UserRestAPI {
         if(!user.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        userService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

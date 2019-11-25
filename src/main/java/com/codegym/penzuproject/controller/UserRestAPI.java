@@ -1,5 +1,6 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.message.request.SearchUserByName;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.model.User;
 import com.codegym.penzuproject.service.IDiaryService;
@@ -65,5 +66,25 @@ public class UserRestAPI {
         }
 
         return new ResponseEntity<>(diaries,HttpStatus.OK);
+    }
+
+    @PostMapping("/user/search-by-name")
+    public ResponseEntity<?> getListUserByName(@RequestBody SearchUserByName userForm) {
+        if(userForm.getName() == "" || userForm.getName() == null) {
+            List<User> users = (List<User>) userService.findAll();
+
+            if(users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(users,HttpStatus.OK);
+            }
+        }
+
+        List<User> users = (List<User>) userService.findUsersByNameContaining(userForm.getName());
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
     }
 }

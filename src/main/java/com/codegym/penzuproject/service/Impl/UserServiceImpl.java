@@ -45,4 +45,9 @@ public class UserServiceImpl implements IUserService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Iterable<User> findUsersByNameContaining(String user_name) {
+        return repository.findUsersByNameContaining(user_name);
+    }
 }

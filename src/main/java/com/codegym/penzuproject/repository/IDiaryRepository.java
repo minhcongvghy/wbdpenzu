@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface IDiaryRepository extends PagingAndSortingRepository<Diary,Long> {
     Iterable<Diary> findDiariesByUserId(Long user_id);
     Iterable<Diary> findDiariesByTitleContainingAndUserId(String title,Long user_id);
+    Iterable<Diary> findDiariesByTagId(Long tag_id);
 }

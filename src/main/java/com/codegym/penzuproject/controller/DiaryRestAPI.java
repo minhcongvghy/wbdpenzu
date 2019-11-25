@@ -103,7 +103,7 @@ public class DiaryRestAPI {
     }
 
 
-    @PostMapping("/diary/search")
+    @PostMapping("/diary/searchBy-Title-And-UserId")
     public ResponseEntity<?> searchDiaryByTitle(@RequestBody SearchByTitleAndUserId searchByTitleAndUserId) {
         List<Diary> diaries;
         if(searchByTitleAndUserId.getTitle() == "") {
@@ -114,6 +114,17 @@ public class DiaryRestAPI {
             return new ResponseEntity<>(diaries,HttpStatus.OK);
         }
         diaries = (List<Diary>) diaryService.findDiariesByTitleContainingAndUserId(searchByTitleAndUserId.getTitle(),searchByTitleAndUserId.getId());
+        return new ResponseEntity<>(diaries,HttpStatus.OK);
+    }
+
+    @GetMapping("/diary/searchBy-TagId/{id}")
+    public ResponseEntity<?> searchByTagId(@PathVariable Long id) {
+        List<Diary> diaries = (List<Diary>) diaryService.findDiariesByTagId(id);
+
+        if (diaries.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
         return new ResponseEntity<>(diaries,HttpStatus.OK);
     }
 }

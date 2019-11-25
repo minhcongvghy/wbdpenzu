@@ -50,5 +50,10 @@ public class DiaryServiceImpl implements IDiaryService {
         return repository.findDiariesByTitleContainingAndUserId(title,user_id);
     }
 
+    @Override
+    public Iterable<Diary> findDiariesByTagId(Long tag_id) {
+        return repository.findDiariesByTagId(tag_id);
+    }
+
 
 }

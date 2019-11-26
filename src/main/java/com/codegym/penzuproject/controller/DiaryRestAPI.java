@@ -1,7 +1,8 @@
 package com.codegym.penzuproject.controller;
 
-import com.codegym.penzuproject.message.request.SearchByTitleAndUserId;
-import com.codegym.penzuproject.message.request.SearchByTitleForm;
+import com.codegym.penzuproject.message.request.SearchDiaryByTagAndTitle;
+import com.codegym.penzuproject.message.request.SearchDiaryByTitleAndUserId;
+import com.codegym.penzuproject.message.request.SearchDiaryByTitleForm;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,16 +106,16 @@ public class DiaryRestAPI {
 
 
     @PostMapping("/diary/searchBy-Title-And-UserId")
-    public ResponseEntity<?> searchDiaryByTitle(@RequestBody SearchByTitleAndUserId searchByTitleAndUserId) {
+    public ResponseEntity<?> searchDiaryByTitle(@RequestBody SearchDiaryByTitleAndUserId searchDiaryByTitleAndUserId) {
         List<Diary> diaries;
-        if(searchByTitleAndUserId.getTitle() == "") {
+        if(searchDiaryByTitleAndUserId.getTitle() == "") {
             diaries = (List<Diary>) diaryService.findAll();
             if(diaries.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(diaries,HttpStatus.OK);
         }
-        diaries = (List<Diary>) diaryService.findDiariesByTitleContainingAndUserId(searchByTitleAndUserId.getTitle(),searchByTitleAndUserId.getId());
+        diaries = (List<Diary>) diaryService.findDiariesByTitleContainingAndUserId(searchDiaryByTitleAndUserId.getTitle(), searchDiaryByTitleAndUserId.getId());
         return new ResponseEntity<>(diaries,HttpStatus.OK);
     }
 
@@ -130,7 +131,7 @@ public class DiaryRestAPI {
     }
 
     @PostMapping("/diary/search-by-title")
-    public ResponseEntity<?> getListDiaryByTitle(@RequestBody SearchByTitleForm titleForm) {
+    public ResponseEntity<?> getListDiaryByTitle(@RequestBody SearchDiaryByTitleForm titleForm) {
         if (titleForm.getTitle() == "" || titleForm.getTitle() == null ) {
             List<Diary> diaries = (List<Diary>) diaryService.findAll();
 
@@ -146,6 +147,43 @@ public class DiaryRestAPI {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
            } else {
             return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/diary/search-by-tag-and-title")
+    public ResponseEntity<?> searchDiaryByTagAndTitle(@RequestBody SearchDiaryByTagAndTitle searchForm) {
+        if (searchForm.getTitle() == null && searchForm.getTagId() == null) {
+            List<Diary> diaries = (List<Diary>) diaryService.findAll();
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
+
+        if (searchForm.getTitle() == null && searchForm.getTagId() != null) {
+            List<Diary> diaries = (List<Diary>) diaryService.findDiariesByTagId(searchForm.getTagId());
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
+
+        if (searchForm.getTitle() != null && searchForm.getTagId() == null) {
+            List<Diary> diaries = (List<Diary>) diaryService.findDiariesByTitleContaining(searchForm.getTitle());
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
+
+        if (searchForm.getTagId() != null && searchForm.getTitle() != null) {
+            List<Diary> diaries = (List<Diary>) diaryService.findDiariesByTagIdAndTitleContaining(searchForm.getTagId(),searchForm.getTitle());
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

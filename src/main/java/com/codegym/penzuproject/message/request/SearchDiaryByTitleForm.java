@@ -1,12 +1,12 @@
 package com.codegym.penzuproject.message.request;
 
-public class SearchByTitleForm {
+public class SearchDiaryByTitleForm {
     private String title;
 
-    public SearchByTitleForm() {
+    public SearchDiaryByTitleForm() {
     }
 
-    public SearchByTitleForm(String title) {
+    public SearchDiaryByTitleForm(String title) {
         this.title = title;
     }
 

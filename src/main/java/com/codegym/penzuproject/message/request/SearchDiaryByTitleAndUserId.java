@@ -1,13 +1,13 @@
 package com.codegym.penzuproject.message.request;
 
-public class SearchByTitleAndUserId {
+public class SearchDiaryByTitleAndUserId {
     private String title;
     private Long id;
 
-    public SearchByTitleAndUserId() {
+    public SearchDiaryByTitleAndUserId() {
     }
 
-    public SearchByTitleAndUserId(String title, Long id) {
+    public SearchDiaryByTitleAndUserId(String title, Long id) {
         this.title = title;
         this.id = id;
     }

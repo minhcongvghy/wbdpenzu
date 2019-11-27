@@ -55,7 +55,21 @@ public class User {
     @OneToMany(targetEntity = Diary.class , mappedBy = "user" , cascade = CascadeType.ALL)
     private List<Diary> diaries;
 
+    @JsonIgnore
+    @OneToMany(targetEntity = Comment.class , mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
     public User() {
+    }
+
+    public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles, List<Diary> diaries, List<Comment> comments) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.diaries = diaries;
+        this.comments = comments;
     }
 
     public User(@NotBlank @Size(min = 3, max = 50) String name, @NotBlank @Size(min = 3, max = 50) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(min = 6, max = 100) String password, Set<Role> roles) {
@@ -80,6 +94,14 @@ public class User {
         this.password = password;
         this.roles = roles;
         this.diaries = diaries;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public List<Diary> getDiaries() {

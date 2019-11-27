@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 @CrossOrigin(origins = "*")
@@ -60,7 +62,9 @@ public class DiaryRestAPI {
     @PostMapping("/diary")
     public ResponseEntity<?> createDiary(@Valid @RequestBody Diary diary) {
 
-        LocalDate date = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String date = now.format(format);
 
         diary.setDate(date);
         diary.setUpdate(false);
@@ -77,7 +81,11 @@ public class DiaryRestAPI {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        LocalDate date = LocalDate.now();
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String date = now.format(format);
+
         diary1.get().setDate(date);
         diary1.get().setTitle(diary.getTitle());
         diary1.get().setDescription(diary.getDescription());
@@ -106,7 +114,7 @@ public class DiaryRestAPI {
 
 
     @PostMapping("/diary/searchBy-Title-And-UserId")
-    public ResponseEntity<?> searchDiaryByTitle(@RequestBody SearchDiaryByTitleAndUserId searchDiaryByTitleAndUserId) {
+    public ResponseEntity<?> searchDiaryByTitleAndUserId(@RequestBody SearchDiaryByTitleAndUserId searchDiaryByTitleAndUserId) {
         List<Diary> diaries;
         if(searchDiaryByTitleAndUserId.getTitle() == "") {
             diaries = (List<Diary>) diaryService.findAll();
@@ -131,7 +139,7 @@ public class DiaryRestAPI {
     }
 
     @PostMapping("/diary/search-by-title")
-    public ResponseEntity<?> getListDiaryByTitle(@RequestBody SearchDiaryByTitleForm titleForm) {
+    public ResponseEntity<?> searchDiaryByTitle(@RequestBody SearchDiaryByTitleForm titleForm) {
         if (titleForm.getTitle() == "" || titleForm.getTitle() == null ) {
             List<Diary> diaries = (List<Diary>) diaryService.findAll();
 

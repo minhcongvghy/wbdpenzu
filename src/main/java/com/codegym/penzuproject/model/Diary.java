@@ -1,7 +1,9 @@
 package com.codegym.penzuproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "diary")
@@ -10,7 +12,7 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
+    private String date;
 
     @Lob
     private String title;
@@ -23,6 +25,7 @@ public class Diary {
 
     private String typeFile;
 
+
     private Boolean isUpdate;
 
     @Lob
@@ -34,7 +37,32 @@ public class Diary {
     @ManyToOne
     private User user;
 
-    public Diary(LocalDate date, String title, String description, String file, String typeFile, Boolean isUpdate, String content, Tag tag, User user) {
+    @JsonIgnore
+    @OneToMany(targetEntity = Comment.class , mappedBy = "diary" , cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    public Diary(String date, String title, String description, String file, String typeFile, Boolean isUpdate, String content, Tag tag, User user, List<Comment> comments) {
+        this.date = date;
+        this.title = title;
+        this.description = description;
+        this.file = file;
+        this.typeFile = typeFile;
+        this.isUpdate = isUpdate;
+        this.content = content;
+        this.tag = tag;
+        this.user = user;
+        this.comments = comments;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Diary(String date, String title, String description, String file, String typeFile, Boolean isUpdate, String content, Tag tag, User user) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -62,7 +90,7 @@ public class Diary {
         isUpdate = update;
     }
 
-    public Diary(LocalDate date, String title, String description, String file, Boolean isUpdate, String content, Tag tag, User user) {
+    public Diary(String date, String title, String description, String file, Boolean isUpdate, String content, Tag tag, User user) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -73,7 +101,7 @@ public class Diary {
         this.user = user;
     }
 
-    public Diary(LocalDate date, String title, String description, String file, String content, Tag tag, User user) {
+    public Diary(String date, String title, String description, String file, String content, Tag tag, User user) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -83,7 +111,7 @@ public class Diary {
         this.user = user;
     }
 
-    public Diary(LocalDate date, String title, String description, String file, String content, Tag tag) {
+    public Diary(String date, String title, String description, String file, String content, Tag tag) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -95,7 +123,7 @@ public class Diary {
     public Diary() {
     }
 
-    public Diary(LocalDate date, String title, String description, String file, String content) {
+    public Diary(String date, String title, String description, String file, String content) {
         this.date = date;
         this.title = title;
         this.description = description;
@@ -127,11 +155,11 @@ public class Diary {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

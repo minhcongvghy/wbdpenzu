@@ -102,7 +102,7 @@ public class CommentRestAPI {
 
     @GetMapping("/comment/diary/{id}")
     public ResponseEntity<?> getAllCommentByDiaryId(@PathVariable Long id) {
-        List<Comment> comments = (List<Comment>) commentService.findAllByDiaryId(id);
+        List<Comment> comments = (List<Comment>) commentService.findCommentsByDiaryId(id);
 
         if (comments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

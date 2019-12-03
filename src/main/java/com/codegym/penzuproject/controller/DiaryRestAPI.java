@@ -8,13 +8,13 @@ import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,7 +28,8 @@ public class DiaryRestAPI {
     private IDiaryService diaryService;
 
     @GetMapping("/diary/pagination")
-    public ResponseEntity<?> getListDiaryAndPagination(@PageableDefault(value = 2) Pageable pageable) {
+    public ResponseEntity<?> getListDiaryAndPagination(@PageableDefault(value = 2 , sort = "date" ,direction = Sort.Direction.ASC) Pageable pageable) {
+//        DESC = Old , ASC = new
         Page<Diary> diaries =  diaryService.findAll(pageable);
 
         if (diaries.isEmpty()) {
@@ -63,10 +64,7 @@ public class DiaryRestAPI {
     public ResponseEntity<?> createDiary(@Valid @RequestBody Diary diary) {
 
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String date = now.format(format);
-
-        diary.setDate(date);
+        diary.setDate(now);
         diary.setUpdate(false);
         diaryService.save(diary);
 
@@ -83,10 +81,10 @@ public class DiaryRestAPI {
 
 
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String date = now.format(format);
+//        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+//        LocalDateTime date = now.format(format);
 
-        diary1.get().setDate(date);
+        diary1.get().setDate(now);
         diary1.get().setTitle(diary.getTitle());
         diary1.get().setDescription(diary.getDescription());
         diary1.get().setContent(diary.getContent());

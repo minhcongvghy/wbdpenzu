@@ -10,9 +10,11 @@ package com.codegym.penzuproject.config;
 //import com.codegym.penzuproject.service.Impl.UserServiceImpl;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
+import com.codegym.penzuproject.formatter.LocalDateTimeFormatter;
 import org.springframework.context.annotation.Configuration;
 //import org.springframework.core.env.Environment;
 //import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 //import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -85,4 +87,9 @@ public class AppConfig implements WebMvcConfigurer {
 //    public ITagService tagService() {
 //        return new TagServiceImpl();
 //    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new LocalDateTimeFormatter());
+    }
 }

@@ -3,6 +3,8 @@ package com.codegym.penzuproject.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -12,7 +14,7 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String date;
+    private LocalDateTime date;
 
     @Lob
     private String title;
@@ -21,10 +23,10 @@ public class Diary {
     private String description;
 
     @Lob
-    private String file;
+    private String urlFile;
 
-    private String typeFile;
-
+    @Lob
+    private String blobString;
 
     private Boolean isUpdate;
 
@@ -41,12 +43,11 @@ public class Diary {
     @OneToMany(targetEntity = Comment.class , mappedBy = "diary" , cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    public Diary(String date, String title, String description, String file, String typeFile, Boolean isUpdate, String content, Tag tag, User user, List<Comment> comments) {
+    public Diary(LocalDateTime date, String title, String description, String urlFile, Boolean isUpdate, String content, Tag tag, User user, List<Comment> comments) {
         this.date = date;
         this.title = title;
         this.description = description;
-        this.file = file;
-        this.typeFile = typeFile;
+        this.urlFile = urlFile;
         this.isUpdate = isUpdate;
         this.content = content;
         this.tag = tag;
@@ -62,24 +63,15 @@ public class Diary {
         this.comments = comments;
     }
 
-    public Diary(String date, String title, String description, String file, String typeFile, Boolean isUpdate, String content, Tag tag, User user) {
+    public Diary(LocalDateTime date, String title, String description, String urlFile, Boolean isUpdate, String content, Tag tag, User user) {
         this.date = date;
         this.title = title;
         this.description = description;
-        this.file = file;
-        this.typeFile = typeFile;
+        this.urlFile = urlFile;
         this.isUpdate = isUpdate;
         this.content = content;
         this.tag = tag;
         this.user = user;
-    }
-
-    public String getTypeFile() {
-        return typeFile;
-    }
-
-    public void setTypeFile(String typeFile) {
-        this.typeFile = typeFile;
     }
 
     public String getUpdate() {
@@ -90,32 +82,21 @@ public class Diary {
         isUpdate = update;
     }
 
-    public Diary(String date, String title, String description, String file, Boolean isUpdate, String content, Tag tag, User user) {
+    public Diary(LocalDateTime date, String title, String description, String urlFile, String content, Tag tag, User user) {
         this.date = date;
         this.title = title;
         this.description = description;
-        this.file = file;
-        this.isUpdate = isUpdate;
+        this.urlFile = urlFile;
         this.content = content;
         this.tag = tag;
         this.user = user;
     }
 
-    public Diary(String date, String title, String description, String file, String content, Tag tag, User user) {
+    public Diary(LocalDateTime date, String title, String description, String urlFile, String content, Tag tag) {
         this.date = date;
         this.title = title;
         this.description = description;
-        this.file = file;
-        this.content = content;
-        this.tag = tag;
-        this.user = user;
-    }
-
-    public Diary(String date, String title, String description, String file, String content, Tag tag) {
-        this.date = date;
-        this.title = title;
-        this.description = description;
-        this.file = file;
+        this.urlFile = urlFile;
         this.content = content;
         this.tag = tag;
     }
@@ -123,11 +104,11 @@ public class Diary {
     public Diary() {
     }
 
-    public Diary(String date, String title, String description, String file, String content) {
+    public Diary(LocalDateTime date, String title, String description, String urlFile, String content) {
         this.date = date;
         this.title = title;
         this.description = description;
-        this.file = file;
+        this.urlFile = urlFile;
         this.content = content;
     }
 
@@ -156,10 +137,12 @@ public class Diary {
     }
 
     public String getDate() {
-        return date;
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String now = date.format(format);
+        return now;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -179,12 +162,12 @@ public class Diary {
         this.description = description;
     }
 
-    public String getFile() {
-        return file;
+    public String getUrlFile() {
+        return urlFile;
     }
 
-    public void setFile(String file) {
-        this.file = file;
+    public void setUrlFile(String urlFile) {
+        this.urlFile = urlFile;
     }
 
     public String getContent() {
@@ -193,5 +176,22 @@ public class Diary {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Diary(Long id, String blobString, Boolean isUpdate, Tag tag, User user, List<Comment> comments) {
+        this.id = id;
+        this.blobString = blobString;
+        this.isUpdate = isUpdate;
+        this.tag = tag;
+        this.user = user;
+        this.comments = comments;
+    }
+
+    public String getBlobString() {
+        return blobString;
+    }
+
+    public void setBlobString(String blobString) {
+        this.blobString = blobString;
     }
 }

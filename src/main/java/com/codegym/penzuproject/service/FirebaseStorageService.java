@@ -21,9 +21,6 @@ public abstract  class FirebaseStorageService<T> {
         try {
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
 
-//            JSONObject jsonObject = new JSONObject(environment.getProperty("GOOGLE_KEY"));
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(new ByteArrayInputStream(environment.getProperty("GOOGLE_KEY").getBytes()));
-
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(credentials)
                     .setDatabaseUrl("https://penzu500.firebaseio.com")

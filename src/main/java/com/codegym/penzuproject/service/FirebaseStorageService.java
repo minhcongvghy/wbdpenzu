@@ -1,5 +1,6 @@
 package com.codegym.penzuproject.service;
 
+import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Diary;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Acl;
@@ -20,9 +21,6 @@ public abstract  class FirebaseStorageService<T> {
     private StorageClient getFirebaseStorage() {
         try {
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
-
-//            JSONObject jsonObject = new JSONObject(environment.getProperty("GOOGLE_KEY"));
-//            GoogleCredentials credentials = GoogleCredentials.fromStream(new ByteArrayInputStream(environment.getProperty("GOOGLE_KEY").getBytes()));
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(credentials)
@@ -57,6 +55,11 @@ public abstract  class FirebaseStorageService<T> {
             return diary.getId().toString().concat(" - ").concat(diary.getTitle()).concat(".").concat(extension);
         }
 
+        if (object instanceof Album) {
+            Album album = (Album) object;
+            return album.getId().toString().concat(" - ").concat(".").concat(extension);
+        }
+
         return null;
     }
 
@@ -72,12 +75,20 @@ public abstract  class FirebaseStorageService<T> {
                 blobString = "diary/" + fileName;
             }
 
+            if (object instanceof Album) {
+                blobString = "album/" + fileName;
+            }
+
             Blob blob = bucket.create(blobString, testFile, Bucket.BlobWriteOption.userProject("penzu500"));
             bucket.getStorage().updateAcl(blob.getBlobId(), Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
             String blobName = blob.getName();
 
             if (object instanceof Diary) {
                 ((Diary) object).setBlobString(blobName);
+            }
+
+            if (object instanceof Album) {
+                ((Album) object).setBlobString(blobName);
             }
             return blob.getMediaLink();
         } catch (IOException ex) {

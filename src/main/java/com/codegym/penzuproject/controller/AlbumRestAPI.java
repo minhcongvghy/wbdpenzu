@@ -40,7 +40,36 @@ public class AlbumRestAPI {
         return new ResponseEntity<>(album,HttpStatus.OK);
     }
 
+    @PostMapping("/album")
+    public ResponseEntity<?> createAlbum(@RequestBody Album album) {
+        albumService.save(album);
+        return new ResponseEntity<>(album, HttpStatus.CREATED);
+    }
 
+    @PutMapping("/album/{id}")
+    public ResponseEntity<?> updateAlbum(@PathVariable Long id , @RequestBody Album album) {
+        Optional<Album> album1 = albumService.findById(id);
+        if (!album1.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        album1.get().setDescription(album.getDescription());
+        albumService.save(album1.get());
+
+        return new ResponseEntity<>(album1 , HttpStatus.OK);
+    }
+
+    @DeleteMapping("/album/{id}")
+    public ResponseEntity<?> deleteAlbum(@PathVariable Long id) {
+        Optional<Album> album = albumService.findById(id);
+
+        if (!album.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        albumService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 
 }

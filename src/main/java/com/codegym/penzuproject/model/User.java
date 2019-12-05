@@ -59,6 +59,18 @@ public class User {
     @OneToMany(targetEntity = Comment.class , mappedBy = "user" , cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @JsonIgnore
+    @OneToMany(targetEntity = Album.class , mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Album> albums;
+
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
+    }
+
     public User() {
     }
 

@@ -81,8 +81,6 @@ public class DiaryRestAPI {
 
 
         LocalDateTime now = LocalDateTime.now();
-//        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-//        LocalDateTime date = now.format(format);
 
         diary1.get().setDate(now);
         diary1.get().setTitle(diary.getTitle());

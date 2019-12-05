@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,8 @@ public class AlbumRestAPI {
 
     @PostMapping("/album")
     public ResponseEntity<?> createAlbum(@RequestBody Album album) {
+        LocalDateTime now = LocalDateTime.now();
+        album.setDate(now);
         albumService.save(album);
         return new ResponseEntity<>(album, HttpStatus.CREATED);
     }
@@ -53,6 +56,7 @@ public class AlbumRestAPI {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        album1.get().setTag(album.getTag());
         album1.get().setDescription(album.getDescription());
         albumService.save(album1.get());
 

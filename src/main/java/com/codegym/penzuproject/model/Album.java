@@ -1,8 +1,11 @@
 package com.codegym.penzuproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Entity
 @Table(name = "album")
@@ -27,6 +30,18 @@ public class Album {
 
     @ManyToOne
     private User user;
+
+    @JsonIgnore
+    @OneToMany(targetEntity = Image.class , mappedBy = "album" , cascade = CascadeType.ALL)
+    private List<Image> images;
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
 
     public Tag getTag() {
         return tag;

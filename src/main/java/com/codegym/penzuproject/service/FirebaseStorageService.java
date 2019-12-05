@@ -58,7 +58,7 @@ public abstract  class FirebaseStorageService<T> {
 
         if (object instanceof Album) {
             Album album = (Album) object;
-            return album.getId().toString().concat(" - ").concat(".").concat(extension);
+            return album.getId().toString().concat(" - ").concat(album.getTitle()).concat(".").concat(extension);
         }
 
         if(object instanceof Image) {

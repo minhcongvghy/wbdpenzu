@@ -15,6 +15,9 @@ public class Album {
     private Long id;
 
     @Lob
+    private String title;
+
+    @Lob
     private String description;
 
     @Lob
@@ -34,6 +37,14 @@ public class Album {
     @JsonIgnore
     @OneToMany(targetEntity = Image.class , mappedBy = "album" , cascade = CascadeType.ALL)
     private List<Image> images;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public List<Image> getImages() {
         return images;

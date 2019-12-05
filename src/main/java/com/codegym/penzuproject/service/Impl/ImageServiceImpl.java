@@ -4,9 +4,11 @@ import com.codegym.penzuproject.model.Image;
 import com.codegym.penzuproject.repository.IImageRepository;
 import com.codegym.penzuproject.service.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ImageServiceImpl implements IImageService {
     @Autowired
     private IImageRepository repository;

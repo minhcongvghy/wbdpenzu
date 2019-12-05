@@ -5,5 +5,5 @@ import com.codegym.penzuproject.service.FirebaseStorageService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImageFirebaseServiceExtend extends FirebaseStorageService<Image> {
+public class ImageFirebaseServiceExtends extends FirebaseStorageService<Image> {
 }

@@ -1,13 +1,17 @@
 package com.codegym.penzuproject.controller;
 
 import com.codegym.penzuproject.message.request.FileForm;
+import com.codegym.penzuproject.message.request.MultiFileForm;
 import com.codegym.penzuproject.message.response.ResponseMessage;
 import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Diary;
+import com.codegym.penzuproject.model.Image;
 import com.codegym.penzuproject.service.IAlbumService;
 import com.codegym.penzuproject.service.IDiaryService;
+import com.codegym.penzuproject.service.IImageService;
 import com.codegym.penzuproject.service.Impl.AlbumFirebaseServiceExtends;
 import com.codegym.penzuproject.service.Impl.DiaryFirebaseServiceExtends;
+import com.codegym.penzuproject.service.Impl.ImageFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,12 @@ public class UploadFileRestAPI {
 
     @Autowired
     private AlbumFirebaseServiceExtends albumFirebaseServiceExtends;
+
+    @Autowired
+    private ImageFirebaseServiceExtends imageFirebaseServiceExtends;
+
+    @Autowired
+    private IImageService imageService;
 
     @Autowired
     Environment env;
@@ -67,8 +77,8 @@ public class UploadFileRestAPI {
         }
     }
 
-    @PostMapping(value = "/album-file/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
-    public ResponseEntity<?> uploadAlbumFile(@ModelAttribute FileForm fileForm, BindingResult result, @PathVariable Long id) throws IOException {
+    @PostMapping(value = "/album-avatar/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<?> uploadAlbumImages(@ModelAttribute FileForm fileForm, BindingResult result, @PathVariable Long id) throws IOException {
         try {
             if (result.hasErrors()) {
                 return new ResponseEntity<>(new ResponseMessage("Upload avatar album fail"), HttpStatus.BAD_REQUEST);
@@ -91,6 +101,38 @@ public class UploadFileRestAPI {
                 }
             }
             albumService.save(album.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/album-add-image/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<?> uploadAlbumImages(@ModelAttribute MultiFileForm multiFileForm, BindingResult result, @PathVariable Long id) throws IOException {
+        try {
+            if (result.hasErrors()) {
+                return new ResponseEntity<>(new ResponseMessage("Upload Image album fail"), HttpStatus.BAD_REQUEST);
+            }
+
+            MultipartFile[] multipartFiles = multiFileForm.getFiles();
+            Optional<Album> album = albumService.findById(id);
+
+            if (!album.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            if (multipartFiles != null) {
+                for (int i = 0 ; i < multipartFiles.length ; i++) {
+                    Image image = new Image();
+                    imageService.save(image);
+                    String urlFile = imageFirebaseServiceExtends.saveToFirebaseStorage(image , multipartFiles[i]);
+                    image.setUrl(urlFile);
+                    image.setAlbum(album.get());
+                    imageService.save(image);
+                }
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);

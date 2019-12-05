@@ -33,4 +33,9 @@ public class AlbumServiceImpl implements IAlbumService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Iterable<Album> findAllByUserId(Long user_id) {
+        return repository.findAllByUserId(user_id);
+    }
 }

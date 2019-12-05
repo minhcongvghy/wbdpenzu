@@ -13,4 +13,5 @@ public interface IAlbumService {
 
     void delete(Long id);
 
+    Iterable<Album> findAllByUserId(Long user_id);
 }

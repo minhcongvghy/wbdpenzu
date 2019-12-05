@@ -75,5 +75,15 @@ public class AlbumRestAPI {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/album/search-by-userId/{id}")
+    public ResponseEntity<?> getAlbumsByUserId(@PathVariable Long id) {
+        List<Album> albums = (List<Album>) albumService.findAllByUserId(id);
+        if (albums.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(albums, HttpStatus.OK);
+    }
+
 
 }

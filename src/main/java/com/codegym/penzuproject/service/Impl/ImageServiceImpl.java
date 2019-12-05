@@ -32,4 +32,9 @@ public class ImageServiceImpl implements IImageService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Iterable<Image> findImagesByAlbumId(Long id) {
+        return repository.findImagesByAlbumId(id);
+    }
 }

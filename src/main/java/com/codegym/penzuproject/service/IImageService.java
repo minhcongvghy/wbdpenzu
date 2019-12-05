@@ -12,4 +12,6 @@ public interface IImageService {
     Image save(Image image);
 
     void delete(Long id);
+
+    Iterable<Image> findImagesByAlbumId(Long id);
 }

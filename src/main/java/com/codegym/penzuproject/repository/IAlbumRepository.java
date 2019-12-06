@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IAlbumRepository extends JpaRepository<Album, Long> {
     Iterable<Album> findAllByUserId(Long user_id);
+
+    Iterable<Album> findAlbumsByTitleContaining(String title);
 }

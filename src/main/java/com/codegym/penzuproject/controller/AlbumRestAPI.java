@@ -1,5 +1,6 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.message.request.SearchAlbumsByTitle;
 import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Image;
 import com.codegym.penzuproject.service.IAlbumService;
@@ -107,6 +108,23 @@ public class AlbumRestAPI {
         }
 
         return new ResponseEntity<>(albums, HttpStatus.OK);
+    }
+
+    @PostMapping("/album/search-album-by-title")
+    public ResponseEntity<?> findAlbumsByTitle(@RequestBody SearchAlbumsByTitle byTitle) {
+        if(byTitle.getTitle() == "" || byTitle.getTitle() == null) {
+            List<Album> albums = (List<Album>) albumService.findAll();
+            if(albums.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(albums,HttpStatus.OK);
+        } else {
+            List<Album> albums = (List<Album>) albumService.findAlbumsByTitleContaining(byTitle.getTitle());
+            if(albums.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(albums,HttpStatus.OK);
+        }
     }
 
 

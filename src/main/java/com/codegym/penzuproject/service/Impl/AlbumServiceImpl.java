@@ -38,4 +38,9 @@ public class AlbumServiceImpl implements IAlbumService {
     public Iterable<Album> findAllByUserId(Long user_id) {
         return repository.findAllByUserId(user_id);
     }
+
+    @Override
+    public Iterable<Album> findAlbumsByTitleContaining(String title) {
+        return repository.findAlbumsByTitleContaining(title);
+    }
 }

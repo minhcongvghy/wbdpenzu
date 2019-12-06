@@ -1,8 +1,11 @@
 package com.codegym.penzuproject.controller;
 
 import com.codegym.penzuproject.model.Album;
+import com.codegym.penzuproject.model.Image;
 import com.codegym.penzuproject.service.IAlbumService;
+import com.codegym.penzuproject.service.IImageService;
 import com.codegym.penzuproject.service.Impl.AlbumFirebaseServiceExtends;
+import com.codegym.penzuproject.service.Impl.ImageFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +24,13 @@ public class AlbumRestAPI {
     private IAlbumService albumService;
 
     @Autowired
+    private IImageService imageService;
+
+    @Autowired
     private AlbumFirebaseServiceExtends albumFirebaseServiceExtends;
+
+    @Autowired
+    private ImageFirebaseServiceExtends imageFirebaseServiceExtends;
 
     @GetMapping("/album")
     public ResponseEntity<?> getAllAlbum() {
@@ -70,6 +79,13 @@ public class AlbumRestAPI {
     @DeleteMapping("/album/{id}")
     public ResponseEntity<?> deleteAlbum(@PathVariable Long id) {
         Optional<Album> album = albumService.findById(id);
+        List<Image> images = (List<Image>) imageService.findImagesByAlbumId(id);
+
+        if (!images.isEmpty()) {
+            for (int i = 0 ; i < images.size() ; i++) {
+                imageFirebaseServiceExtends.deleteFirebaseStorageFile(images.get(i));
+            }
+        }
 
         if (!album.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

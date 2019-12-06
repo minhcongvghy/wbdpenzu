@@ -1,7 +1,9 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Comment;
 import com.codegym.penzuproject.model.Diary;
+import com.codegym.penzuproject.service.IAlbumService;
 import com.codegym.penzuproject.service.ICommentService;
 import com.codegym.penzuproject.service.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class CommentRestAPI {
 
     @Autowired
     private IDiaryService diaryService;
+
+    @Autowired
+    private IAlbumService albumService;
 
     @GetMapping("/comment")
     public ResponseEntity<?> getListAllComment() {
@@ -49,22 +54,26 @@ public class CommentRestAPI {
 
     @PostMapping("/comment")
     public ResponseEntity<?> createComment(@RequestBody Comment comment) {
-        Optional<Diary> diary = diaryService.findById(comment.getIdDiary());
-        if (!diary.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
+        if(comment.getIdDiary() != null) {
+            Optional<Diary> diary = diaryService.findById(comment.getIdDiary());
+            comment.setDiary(diary.get());
+        }
+
+        if(comment.getIdAlbum() != null) {
+            Optional<Album> album = albumService.findById(comment.getIdAlbum());
+            comment.setAlbum(album.get());
+        }
+
+
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             String date = now.format(format);
-
             comment.setEdit(false);
             comment.setDate(date);
-            comment.setDiary(diary.get());
 
             commentService.save(comment);
 
             return new ResponseEntity<>(comment, HttpStatus.CREATED);
-        }
     }
 
     @PutMapping("/comment/{id}")
@@ -109,5 +118,16 @@ public class CommentRestAPI {
         }
 
         return new ResponseEntity<>(comments,HttpStatus.OK);
+    }
+
+    @GetMapping("/comment/album/{id}")
+    public ResponseEntity<?> getAllCommentByAlbumId(@PathVariable Long id) {
+        List<Comment> comments = (List<Comment>) commentService.findCommentsByAlbumId(id);
+
+        if(comments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 }

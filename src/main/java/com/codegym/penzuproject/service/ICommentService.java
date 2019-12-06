@@ -14,4 +14,6 @@ public interface ICommentService {
     void delete(Long id);
 
     Iterable<Comment> findCommentsByDiaryId(Long diary_id);
+
+    Iterable<Comment> findCommentsByAlbumId(Long album_id);
 }

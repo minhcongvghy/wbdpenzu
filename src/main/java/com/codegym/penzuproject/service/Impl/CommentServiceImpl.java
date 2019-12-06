@@ -38,5 +38,10 @@ public class CommentServiceImpl implements ICommentService {
         return repository.findCommentsByDiaryId(diary_id);
     }
 
+    @Override
+    public Iterable<Comment> findCommentsByAlbumId(Long album_id) {
+        return repository.findCommentsByAlbumId(album_id);
+    }
+
 
 }

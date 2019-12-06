@@ -38,6 +38,18 @@ public class Album {
     @OneToMany(targetEntity = Image.class , mappedBy = "album" , cascade = CascadeType.ALL)
     private List<Image> images;
 
+    @JsonIgnore
+    @OneToMany(targetEntity = Comment.class , mappedBy = "album" , cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     public String getTitle() {
         return title;
     }

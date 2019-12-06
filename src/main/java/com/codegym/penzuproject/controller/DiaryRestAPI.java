@@ -5,6 +5,7 @@ import com.codegym.penzuproject.message.request.SearchDiaryByTitleAndUserId;
 import com.codegym.penzuproject.message.request.SearchDiaryByTitleForm;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.service.IDiaryService;
+import com.codegym.penzuproject.service.Impl.DiaryFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,9 @@ public class DiaryRestAPI {
 
     @Autowired
     private IDiaryService diaryService;
+
+    @Autowired
+    private DiaryFirebaseServiceExtends diaryFirebaseServiceExtends;
 
     @GetMapping("/diary/pagination")
     public ResponseEntity<?> getListDiaryAndPagination(@PageableDefault(value = 2 , sort = "date" ,direction = Sort.Direction.ASC) Pageable pageable) {
@@ -101,6 +105,10 @@ public class DiaryRestAPI {
 
         if (!diary.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if(diary.get().getBlobString() != null) {
+            diaryFirebaseServiceExtends.deleteFirebaseStorageFile(diary.get());
         }
 
         diaryService.delete(id);

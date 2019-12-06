@@ -2,6 +2,7 @@ package com.codegym.penzuproject.controller;
 
 import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.service.IAlbumService;
+import com.codegym.penzuproject.service.Impl.AlbumFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ public class AlbumRestAPI {
 
     @Autowired
     private IAlbumService albumService;
+
+    @Autowired
+    private AlbumFirebaseServiceExtends albumFirebaseServiceExtends;
 
     @GetMapping("/album")
     public ResponseEntity<?> getAllAlbum() {
@@ -69,6 +73,10 @@ public class AlbumRestAPI {
 
         if (!album.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (album.get().getBlobString() != null) {
+            albumFirebaseServiceExtends.deleteFirebaseStorageFile(album.get());
         }
 
         albumService.delete(id);

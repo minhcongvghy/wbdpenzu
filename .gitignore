@@ -1,4 +1,5 @@
 HELP.md
+google_credentials
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

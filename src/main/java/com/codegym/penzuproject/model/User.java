@@ -63,6 +63,38 @@ public class User {
     @OneToMany(targetEntity = Album.class , mappedBy = "user" , cascade = CascadeType.ALL)
     private List<Album> albums;
 
+    @Lob
+    private String avatar;
+
+    @Lob
+    private String blobString;
+
+    public User(Long id, Set<Role> roles, List<Diary> diaries, List<Comment> comments, List<Album> albums, String avatar, String blobString) {
+        this.id = id;
+        this.roles = roles;
+        this.diaries = diaries;
+        this.comments = comments;
+        this.albums = albums;
+        this.avatar = avatar;
+        this.blobString = blobString;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getBlobString() {
+        return blobString;
+    }
+
+    public void setBlobString(String blobString) {
+        this.blobString = blobString;
+    }
+
     public List<Album> getAlbums() {
         return albums;
     }

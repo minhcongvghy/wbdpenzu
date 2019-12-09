@@ -3,6 +3,7 @@ package com.codegym.penzuproject.service;
 import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.model.Image;
+import com.codegym.penzuproject.model.User;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
@@ -66,6 +67,11 @@ public abstract  class FirebaseStorageService<T> {
             return image.getId().toString().concat(" - ").concat(".").concat(extension);
         }
 
+        if (object instanceof User) {
+            User user = (User) object;
+            return user.getId().toString().concat("-").concat(user.getUsername()).concat(".").concat(extension);
+        }
+
         return null;
     }
 
@@ -89,6 +95,10 @@ public abstract  class FirebaseStorageService<T> {
                 blobString = "image/" + fileName;
             }
 
+            if (object instanceof User) {
+                blobString = "user/" + fileName;
+            }
+
             Blob blob = bucket.create(blobString, testFile, Bucket.BlobWriteOption.userProject("penzu500"));
             bucket.getStorage().updateAcl(blob.getBlobId(), Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
             String blobName = blob.getName();
@@ -104,6 +114,10 @@ public abstract  class FirebaseStorageService<T> {
 
             if (object instanceof Image) {
                 ((Image) object).setBlobString(blobName);
+            }
+
+            if (object instanceof User) {
+                ((User) object).setBlobString(blobName);
             }
             return blob.getMediaLink();
         } catch (IOException ex) {
@@ -125,6 +139,10 @@ public abstract  class FirebaseStorageService<T> {
 
             if (object instanceof Image) {
                 blobString = ((Image) object).getBlobString();
+            }
+
+            if (object instanceof User) {
+                blobString = ((User) object).getBlobString();
             }
 
             BlobId blobId = BlobId.of(storageClient.bucket().getName(), blobString);

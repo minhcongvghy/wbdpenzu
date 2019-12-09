@@ -6,12 +6,15 @@ import com.codegym.penzuproject.message.response.ResponseMessage;
 import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.model.Image;
+import com.codegym.penzuproject.model.User;
 import com.codegym.penzuproject.service.IAlbumService;
 import com.codegym.penzuproject.service.IDiaryService;
 import com.codegym.penzuproject.service.IImageService;
+import com.codegym.penzuproject.service.IUserService;
 import com.codegym.penzuproject.service.Impl.AlbumFirebaseServiceExtends;
 import com.codegym.penzuproject.service.Impl.DiaryFirebaseServiceExtends;
 import com.codegym.penzuproject.service.Impl.ImageFirebaseServiceExtends;
+import com.codegym.penzuproject.service.Impl.UserFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,12 @@ public class UploadFileRestAPI {
     private IAlbumService albumService;
 
     @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private IImageService imageService;
+
+    @Autowired
     private DiaryFirebaseServiceExtends diaryFirebaseServiceExtends;
 
     @Autowired
@@ -42,8 +51,8 @@ public class UploadFileRestAPI {
     @Autowired
     private ImageFirebaseServiceExtends imageFirebaseServiceExtends;
 
-    @Autowired
-    private IImageService imageService;
+   @Autowired
+    private UserFirebaseServiceExtends userFirebaseServiceExtends;
 
     @Autowired
     Environment env;
@@ -101,6 +110,36 @@ public class UploadFileRestAPI {
                 }
             }
             albumService.save(album.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/user-avatar/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity<?> uploadAvatarUser(@ModelAttribute FileForm fileForm, BindingResult result, @PathVariable Long id) throws IOException {
+        try {
+            if (result.hasErrors()) {
+                return new ResponseEntity<>(new ResponseMessage("Upload avatar user fail"), HttpStatus.BAD_REQUEST);
+            }
+            MultipartFile multipartFile = fileForm.getFile();
+            Optional<User> user = userService.findById(id);
+
+            if (!user.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            if (multipartFile != null) {
+                if(user.get().getBlobString() == null) {
+                    String urlFile = userFirebaseServiceExtends.saveToFirebaseStorage(user.get() , multipartFile);
+                    user.get().setAvatar(urlFile);
+                } else {
+                    userFirebaseServiceExtends.deleteFirebaseStorageFile(user.get());
+                    String urlFile = userFirebaseServiceExtends.saveToFirebaseStorage(user.get() , multipartFile);
+                    user.get().setAvatar(urlFile);
+                }
+            }
+            userService.save(user.get());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);

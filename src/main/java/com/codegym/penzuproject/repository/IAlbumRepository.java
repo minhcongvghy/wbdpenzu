@@ -15,4 +15,7 @@ public interface IAlbumRepository extends PagingAndSortingRepository<Album, Long
 
     Page<Album> findAllByOrderByDateAsc(Pageable pageable);
     Page<Album> findAllByOrderByDateDesc(Pageable pageable);
+
+    Iterable<Album> findAlbumsByTagId(Long tag_id);
+    Iterable<Album> findAlbumsByTagIdAndTitleContaining(Long tag_id , String title);
 }

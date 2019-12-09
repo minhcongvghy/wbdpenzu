@@ -55,4 +55,14 @@ public class AlbumServiceImpl implements IAlbumService {
     public Page<Album> findAllByOrderByDateDesc(Pageable pageable) {
         return repository.findAllByOrderByDateDesc(pageable);
     }
+
+    @Override
+    public Iterable<Album> findAlbumsByTagId(Long tag_id) {
+        return repository.findAlbumsByTagId(tag_id);
+    }
+
+    @Override
+    public Iterable<Album> findAlbumsByTagIdAndTitleContaining(Long tag_id, String title) {
+        return repository.findAlbumsByTagIdAndTitleContaining(tag_id,title);
+    }
 }

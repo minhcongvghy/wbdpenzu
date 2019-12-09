@@ -1,7 +1,9 @@
 package com.codegym.penzuproject.controller;
 
+import com.codegym.penzuproject.message.request.SearchAlbumByTagIdAndTitle;
 import com.codegym.penzuproject.message.request.SearchAlbumsByTitle;
 import com.codegym.penzuproject.model.Album;
+import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.model.Image;
 import com.codegym.penzuproject.service.IAlbumService;
 import com.codegym.penzuproject.service.IImageService;
@@ -148,6 +150,43 @@ public class AlbumRestAPI {
         }
 
         return new ResponseEntity<>(albums,HttpStatus.OK);
+    }
+
+    @PostMapping("/album/search-by-tagId-and-title")
+    public ResponseEntity<?> searchAlbumByTagIdAndTitle(@RequestBody SearchAlbumByTagIdAndTitle formSearch) {
+        if (formSearch.getTitle() == null && formSearch.getTagId() == null) {
+            List<Album> albums = (List<Album>) albumService.findAll();
+            if(albums.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(albums,HttpStatus.OK);
+        }
+
+        if (formSearch.getTitle() == null && formSearch.getTagId() != null) {
+            List<Album> albums = (List<Album>) albumService.findAlbumsByTagId(formSearch.getTagId());
+            if(albums.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(albums,HttpStatus.OK);
+        }
+
+        if (formSearch.getTitle() != null && formSearch.getTagId() == null) {
+            List<Album> diaries = (List<Album>) albumService.findAlbumsByTitleContaining(formSearch.getTitle());
+            if(diaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(diaries,HttpStatus.OK);
+        }
+
+        if (formSearch.getTagId() != null && formSearch.getTitle() != null) {
+            List<Album> albums = (List<Album>) albumService.findAlbumsByTagIdAndTitleContaining(formSearch.getTagId(),formSearch.getTitle());
+            if(albums.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(albums,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

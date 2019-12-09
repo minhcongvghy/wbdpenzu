@@ -4,6 +4,8 @@ import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.repository.IAlbumRepository;
 import com.codegym.penzuproject.service.IAlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -42,5 +44,15 @@ public class AlbumServiceImpl implements IAlbumService {
     @Override
     public Iterable<Album> findAlbumsByTitleContaining(String title) {
         return repository.findAlbumsByTitleContaining(title);
+    }
+
+    @Override
+    public Page<Album> findAllByOrderByDateAsc(Pageable pageable) {
+        return repository.findAllByOrderByDateAsc(pageable);
+    }
+
+    @Override
+    public Page<Album> findAllByOrderByDateDesc(Pageable pageable) {
+        return repository.findAllByOrderByDateDesc(pageable);
     }
 }

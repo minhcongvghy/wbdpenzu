@@ -8,6 +8,9 @@ import com.codegym.penzuproject.service.IImageService;
 import com.codegym.penzuproject.service.Impl.AlbumFirebaseServiceExtends;
 import com.codegym.penzuproject.service.Impl.ImageFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -125,6 +128,26 @@ public class AlbumRestAPI {
             }
             return new ResponseEntity<>(albums,HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/album/pagination/ASC")
+    public ResponseEntity<?> getListAlbumAndSortingByDateASC(@PageableDefault(value = 100000 )Pageable pageable) {
+        Page<Album> albums = albumService.findAllByOrderByDateAsc(pageable);
+        if (albums.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(albums,HttpStatus.OK);
+    }
+
+    @GetMapping("/album/pagination/DESC")
+    public ResponseEntity<?> getListAlbumAndSortingByDateDESC(@PageableDefault(value = 100000 )Pageable pageable) {
+        Page<Album> albums = albumService.findAllByOrderByDateDesc(pageable);
+        if (albums.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(albums,HttpStatus.OK);
     }
 
 

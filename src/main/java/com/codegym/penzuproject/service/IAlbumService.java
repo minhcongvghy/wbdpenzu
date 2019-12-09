@@ -1,6 +1,8 @@
 package com.codegym.penzuproject.service;
 
 import com.codegym.penzuproject.model.Album;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -17,4 +19,7 @@ public interface IAlbumService {
 
     Iterable<Album> findAlbumsByTitleContaining(String title);
 
+    Page<Album> findAllByOrderByDateAsc(Pageable pageable);
+
+    Page<Album> findAllByOrderByDateDesc(Pageable pageable);
 }

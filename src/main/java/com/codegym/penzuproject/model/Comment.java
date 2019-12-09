@@ -15,13 +15,32 @@ public class Comment {
     private String date;
     private Boolean isEdit;
     private Long idDiary;
+    private Long idAlbum;
 
+    public Long getIdAlbum() {
+        return idAlbum;
+    }
+
+    public void setIdAlbum(Long idAlbum) {
+        this.idAlbum = idAlbum;
+    }
 
     @ManyToOne
     private Diary diary;
 
     @ManyToOne
     private User user;
+
+    @ManyToOne
+    private Album album;
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
 
     public Comment() {
     }

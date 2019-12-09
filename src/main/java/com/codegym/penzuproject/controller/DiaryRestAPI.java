@@ -5,6 +5,7 @@ import com.codegym.penzuproject.message.request.SearchDiaryByTitleAndUserId;
 import com.codegym.penzuproject.message.request.SearchDiaryByTitleForm;
 import com.codegym.penzuproject.model.Diary;
 import com.codegym.penzuproject.service.IDiaryService;
+import com.codegym.penzuproject.service.Impl.DiaryFirebaseServiceExtends;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +28,23 @@ public class DiaryRestAPI {
     @Autowired
     private IDiaryService diaryService;
 
-    @GetMapping("/diary/pagination")
-    public ResponseEntity<?> getListDiaryAndPagination(@PageableDefault(value = 2 , sort = "date" ,direction = Sort.Direction.ASC) Pageable pageable) {
-//        DESC = Old , ASC = new
-        Page<Diary> diaries =  diaryService.findAll(pageable);
+    @Autowired
+    private DiaryFirebaseServiceExtends diaryFirebaseServiceExtends;
+
+    @GetMapping("/diary/pagination/ASC")
+    public ResponseEntity<?> getListDiaryAndPaginationASC(@PageableDefault(value = 2 ) Pageable pageable) {
+        Page<Diary> diaries =  diaryService.findAllByOrderByDateAsc(pageable);
+
+        if (diaries.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(diaries, HttpStatus.OK);
+    }
+
+    @GetMapping("/diary/pagination/DESC")
+    public ResponseEntity<?> getListDiaryAndPaginationDESC(@PageableDefault(value = 2 ) Pageable pageable) {
+        Page<Diary> diaries =  diaryService.findAllByOrderByDateDesc(pageable);
 
         if (diaries.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -81,8 +95,6 @@ public class DiaryRestAPI {
 
 
         LocalDateTime now = LocalDateTime.now();
-//        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-//        LocalDateTime date = now.format(format);
 
         diary1.get().setDate(now);
         diary1.get().setTitle(diary.getTitle());
@@ -103,6 +115,10 @@ public class DiaryRestAPI {
 
         if (!diary.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if(diary.get().getBlobString() != null) {
+            diaryFirebaseServiceExtends.deleteFirebaseStorageFile(diary.get());
         }
 
         diaryService.delete(id);

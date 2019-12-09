@@ -65,5 +65,15 @@ public class DiaryServiceImpl implements IDiaryService {
         return repository.findDiariesByTagIdAndTitleContaining(tag_id,title);
     }
 
+    @Override
+    public Page<Diary> findAllByOrderByDateAsc(Pageable pageable) {
+        return repository.findAllByOrderByDateAsc(pageable);
+    }
+
+    @Override
+    public Page<Diary> findAllByOrderByDateDesc(Pageable pageable) {
+        return repository.findAllByOrderByDateDesc(pageable);
+    }
+
 
 }

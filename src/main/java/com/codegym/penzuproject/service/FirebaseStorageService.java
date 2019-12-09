@@ -1,6 +1,8 @@
 package com.codegym.penzuproject.service;
 
+import com.codegym.penzuproject.model.Album;
 import com.codegym.penzuproject.model.Diary;
+import com.codegym.penzuproject.model.Image;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
@@ -54,6 +56,16 @@ public abstract  class FirebaseStorageService<T> {
             return diary.getId().toString().concat(" - ").concat(diary.getTitle()).concat(".").concat(extension);
         }
 
+        if (object instanceof Album) {
+            Album album = (Album) object;
+            return album.getId().toString().concat(" - ").concat(album.getTitle()).concat(".").concat(extension);
+        }
+
+        if(object instanceof Image) {
+            Image image = (Image) object;
+            return image.getId().toString().concat(" - ").concat(".").concat(extension);
+        }
+
         return null;
     }
 
@@ -69,12 +81,29 @@ public abstract  class FirebaseStorageService<T> {
                 blobString = "diary/" + fileName;
             }
 
+            if (object instanceof Album) {
+                blobString = "album/" + fileName;
+            }
+
+            if (object instanceof Image) {
+                blobString = "image/" + fileName;
+            }
+
             Blob blob = bucket.create(blobString, testFile, Bucket.BlobWriteOption.userProject("penzu500"));
             bucket.getStorage().updateAcl(blob.getBlobId(), Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
             String blobName = blob.getName();
 
             if (object instanceof Diary) {
                 ((Diary) object).setBlobString(blobName);
+            }
+
+            if (object instanceof Album) {
+                ((Album) object).setBlobString(blobName);
+            }
+
+
+            if (object instanceof Image) {
+                ((Image) object).setBlobString(blobName);
             }
             return blob.getMediaLink();
         } catch (IOException ex) {
@@ -88,6 +117,14 @@ public abstract  class FirebaseStorageService<T> {
             String blobString = "";
             if (object instanceof Diary) {
                 blobString = ((Diary) object).getBlobString();
+            }
+
+            if (object instanceof Album) {
+                blobString = ((Album) object).getBlobString();
+            }
+
+            if (object instanceof Image) {
+                blobString = ((Image) object).getBlobString();
             }
 
             BlobId blobId = BlobId.of(storageClient.bucket().getName(), blobString);

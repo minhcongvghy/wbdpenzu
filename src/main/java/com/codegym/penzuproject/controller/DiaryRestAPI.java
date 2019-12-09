@@ -31,10 +31,20 @@ public class DiaryRestAPI {
     @Autowired
     private DiaryFirebaseServiceExtends diaryFirebaseServiceExtends;
 
-    @GetMapping("/diary/pagination")
-    public ResponseEntity<?> getListDiaryAndPagination(@PageableDefault(value = 2 , sort = "date" ,direction = Sort.Direction.ASC) Pageable pageable) {
-//        DESC = Old , ASC = new
-        Page<Diary> diaries =  diaryService.findAll(pageable);
+    @GetMapping("/diary/pagination/ASC")
+    public ResponseEntity<?> getListDiaryAndPaginationASC(@PageableDefault(value = 2 ) Pageable pageable) {
+        Page<Diary> diaries =  diaryService.findAllByOrderByDateAsc(pageable);
+
+        if (diaries.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(diaries, HttpStatus.OK);
+    }
+
+    @GetMapping("/diary/pagination/DESC")
+    public ResponseEntity<?> getListDiaryAndPaginationDESC(@PageableDefault(value = 2 ) Pageable pageable) {
+        Page<Diary> diaries =  diaryService.findAllByOrderByDateDesc(pageable);
 
         if (diaries.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

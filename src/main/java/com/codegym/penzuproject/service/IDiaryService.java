@@ -28,4 +28,7 @@ public interface IDiaryService {
 
     Iterable<Diary> findDiariesByTagIdAndTitleContaining(Long tag_id, String title);
 
+    Page<Diary> findAllByOrderByDateAsc(Pageable pageable);
+
+    Page<Diary> findAllByOrderByDateDesc(Pageable pageable);
 }

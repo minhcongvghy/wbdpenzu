@@ -111,15 +111,15 @@ public class AlbumRestAPI {
     }
 
     @PostMapping("/album/search-album-by-title")
-    public ResponseEntity<?> findAlbumsByTitle(@RequestBody SearchAlbumsByTitle byTitle) {
-        if(byTitle.getTitle() == "" || byTitle.getTitle() == null) {
+    public ResponseEntity<?> findAlbumsByTitle(@RequestBody SearchAlbumsByTitle searchAlbumsByTitle) {
+        if(searchAlbumsByTitle.getTitle() == "" || searchAlbumsByTitle.getTitle() == null) {
             List<Album> albums = (List<Album>) albumService.findAll();
             if(albums.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(albums,HttpStatus.OK);
         } else {
-            List<Album> albums = (List<Album>) albumService.findAlbumsByTitleContaining(byTitle.getTitle());
+            List<Album> albums = (List<Album>) albumService.findAlbumsByTitleContaining(searchAlbumsByTitle.getTitle());
             if(albums.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

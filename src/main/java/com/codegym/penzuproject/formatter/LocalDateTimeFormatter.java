@@ -23,5 +23,4 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
         }
         return localDateTime.toString();
     }
-
 }

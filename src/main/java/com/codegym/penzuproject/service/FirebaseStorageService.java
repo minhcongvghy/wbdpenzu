@@ -26,8 +26,8 @@ public abstract  class FirebaseStorageService<T> {
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(credentials)
-                    .setDatabaseUrl("https://penzu500.firebaseio.com")
-                    .setStorageBucket("penzu500.appspot.com")
+                    .setDatabaseUrl("https://cong500.firebaseio.com")
+                    .setStorageBucket("cong500.appspot.com")
                     .build();
 
             FirebaseApp fireApp = null;
@@ -99,7 +99,7 @@ public abstract  class FirebaseStorageService<T> {
                 blobString = "user/" + fileName;
             }
 
-            Blob blob = bucket.create(blobString, testFile, Bucket.BlobWriteOption.userProject("penzu500"));
+            Blob blob = bucket.create(blobString, testFile, Bucket.BlobWriteOption.userProject("cong500"));
             bucket.getStorage().updateAcl(blob.getBlobId(), Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
             String blobName = blob.getName();
 
